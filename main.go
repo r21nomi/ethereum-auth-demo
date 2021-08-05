@@ -2,6 +2,7 @@ package main
 
 import (
     "encoding/json"
+    "ethereum-auth-demo/main/domain"
     "fmt"
     "github.com/ethereum/go-ethereum/common"
     "github.com/ethereum/go-ethereum/common/hexutil"
@@ -62,7 +63,14 @@ func HandleGetAuth() http.HandlerFunc {
         log.Print("recoveredAddr: " + recoveredAddr.Hex())
         log.Print(fromAddr.Hex() == recoveredAddr.Hex())
 
-        response := Response{"Authorized."}
+        jwtToken, err := domain.GetJWT(fromAddr.Hex())
+        if err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+        log.Print(jwtToken)
+
+        response := Response{"Authorized: " + jwtToken}
 
         jsonResponse, err := json.Marshal(response)
         if err != nil {
