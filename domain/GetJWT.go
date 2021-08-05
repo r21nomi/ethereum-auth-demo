@@ -2,6 +2,7 @@ package domain
 
 import (
     jwt "github.com/form3tech-oss/jwt-go"
+    "os"
     "time"
 )
 
@@ -15,7 +16,7 @@ func GetJWT(address string) (string, error) {
     claims["iat"] = time.Now().Unix()
     claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
-    tokenString, err := token.SignedString([]byte("Aa*fp*HTZiz&^n@Z&BY%mM:G"))
+    tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SIGNING_KEY")))
     if err != nil {
         return "", err
     }

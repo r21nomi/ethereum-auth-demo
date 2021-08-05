@@ -9,6 +9,7 @@ import (
     "github.com/ethereum/go-ethereum/crypto"
     "github.com/gorilla/mux"
     "github.com/rs/cors"
+    "github.com/joho/godotenv"
     "log"
     "net/http"
     "os"
@@ -95,6 +96,12 @@ func signHash(data []byte) []byte {
 
 func main() {
     r := mux.NewRouter()
+
+    err := godotenv.Load("config/.env")
+    if err != nil {
+        log.Print(err.Error())
+        log.Print("Error loading .env")
+    }
 
     getPath := func(path string) string {
         return "/v1" + path
