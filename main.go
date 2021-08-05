@@ -8,8 +8,8 @@ import (
     "github.com/ethereum/go-ethereum/common/hexutil"
     "github.com/ethereum/go-ethereum/crypto"
     "github.com/gorilla/mux"
-    "github.com/rs/cors"
     "github.com/joho/godotenv"
+    "github.com/rs/cors"
     "log"
     "net/http"
     "os"
@@ -71,9 +71,7 @@ func HandleGetAuth() http.HandlerFunc {
         }
         log.Print(jwtToken)
 
-        response := Response{"Authorized: " + jwtToken}
-
-        jsonResponse, err := json.Marshal(response)
+        jsonResponse, err := json.Marshal(jwtToken)
         if err != nil {
             http.Error(w, err.Error(), http.StatusInternalServerError)
             return
