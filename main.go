@@ -16,10 +16,6 @@ import (
     "strings"
 )
 
-type Response struct {
-    Message string `json:"message"`
-}
-
 func HandleGetAuth() http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
         var message = ""
