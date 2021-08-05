@@ -78,6 +78,36 @@ func HandleGetAuth() http.HandlerFunc {
     }
 }
 
+func HandleGetUser() http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        var token = ""
+        q := r.URL.Query()
+        t := q.Get("token")
+        if t != "" {
+            token = t
+        } else {
+            http.Error(w, "token is empty.", http.StatusInternalServerError)
+            return
+        }
+
+        tokenObj, err := domain.VerifyToken(token)
+        if err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+        log.Print(tokenObj.Subject)
+
+        jsonResponse, err := json.Marshal("user")
+        if err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+        w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusOK)
+        w.Write(jsonResponse)
+    }
+}
+
 /**
  * A message used on ethers.js must have prefix.
  *
@@ -102,6 +132,7 @@ func main() {
     }
 
     r.Handle(getPath("/auth/{signature}"), HandleGetAuth()).Methods("GET")
+    r.Handle(getPath("/user"), HandleGetUser()).Methods("GET")
 
     port := os.Getenv("PORT")
     if port == "" {

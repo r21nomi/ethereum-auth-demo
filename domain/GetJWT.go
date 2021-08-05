@@ -14,9 +14,10 @@ func GetJWT(address string) (string, error) {
     claims["sub"] = address
     claims["name"] = "name_" + address
     claims["iat"] = time.Now().Unix()
-    claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+    //claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+    claims["exp"] = time.Now().Add(time.Minute * 3).Unix()
 
-    tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SIGNING_KEY")))
+    tokenString, err := token.SignedString([]byte(os.Getenv("TOKEN_SIGNING_KEY")))
     if err != nil {
         return "", err
     }
